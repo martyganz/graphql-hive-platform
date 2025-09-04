@@ -358,7 +358,7 @@ export function Highlights() {
       />
       <HighlightItem
         icon={<RouteIcon className="size-6" />}
-        title="Familiair Query Plans"
+        title="Familiar Query Plans"
         description="Apollo-style query plans, no new concepts to learn."
       />
     </div>
