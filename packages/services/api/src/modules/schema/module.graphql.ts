@@ -842,15 +842,15 @@ export default gql`
     pageInfo: PageInfo! @tag(name: "public")
   }
 
-  input SchemaExplorerUsageInput {
+  input SchemaExplorerUsageInput  {
     period: DateRangeInput!
   }
 
-  input UnusedSchemaExplorerUsageInput {
+  input UnusedSchemaExplorerUsageInput @tag(name: "public") {
     period: DateRangeInput!
   }
 
-  input DeprecatedSchemaExplorerUsageInput {
+  input DeprecatedSchemaExplorerUsageInput @tag(name: "public") {
     period: DateRangeInput!
   }
 
@@ -874,14 +874,14 @@ export default gql`
   }
 
   type UnusedSchemaExplorer {
-    types: [GraphQLNamedType!]!
+    types: [GraphQLNamedType!]! @tag(name: "public")
   }
 
   type DeprecatedSchemaExplorer {
-    types: [GraphQLNamedType!]!
+    types: [GraphQLNamedType!]! @tag(name: "public")
   }
 
-  type SchemaCoordinateUsage {
+  type SchemaCoordinateUsage @tag(name: "public") {
     total: Float!
     isUsed: Boolean!
     """
@@ -892,7 +892,7 @@ export default gql`
     topOperations(limit: Int!): [SchemaCoordinateUsageOperation!]!
   }
 
-  type SchemaCoordinateUsageOperation {
+  type SchemaCoordinateUsageOperation @tag(name: "public") {
     name: String!
     hash: String!
     """
@@ -925,7 +925,7 @@ export default gql`
     source: String
   }
 
-  union GraphQLNamedType =
+  union GraphQLNamedType @tag(name: "public") =
     | GraphQLObjectType
     | GraphQLInterfaceType
     | GraphQLUnionType
@@ -933,7 +933,7 @@ export default gql`
     | GraphQLInputObjectType
     | GraphQLScalarType
 
-  type GraphQLObjectType {
+  type GraphQLObjectType @tag(name: "public") {
     name: String!
     description: String
     fields: [GraphQLField!]!
@@ -946,7 +946,7 @@ export default gql`
     supergraphMetadata: SupergraphMetadata
   }
 
-  type GraphQLInterfaceType {
+  type GraphQLInterfaceType @tag(name: "public") {
     name: String!
     description: String
     fields: [GraphQLField!]!
@@ -959,7 +959,7 @@ export default gql`
     supergraphMetadata: SupergraphMetadata
   }
 
-  type GraphQLUnionType {
+  type GraphQLUnionType @tag(name: "public") {
     name: String!
     description: String
     members: [GraphQLUnionTypeMember!]!
@@ -971,7 +971,7 @@ export default gql`
     supergraphMetadata: SupergraphMetadata
   }
 
-  type GraphQLUnionTypeMember {
+  type GraphQLUnionTypeMember @tag(name: "public") {
     name: String!
     usage: SchemaCoordinateUsage!
     """
@@ -981,7 +981,7 @@ export default gql`
     supergraphMetadata: SupergraphMetadata
   }
 
-  type GraphQLEnumType {
+  type GraphQLEnumType @tag(name: "public") {
     name: String!
     description: String
     deprecationReason: String
@@ -994,7 +994,7 @@ export default gql`
     supergraphMetadata: SupergraphMetadata
   }
 
-  type GraphQLInputObjectType {
+  type GraphQLInputObjectType @tag(name: "public") {
     name: String!
     description: String
     fields: [GraphQLInputField!]!
@@ -1006,7 +1006,7 @@ export default gql`
     supergraphMetadata: SupergraphMetadata
   }
 
-  type GraphQLScalarType {
+  type GraphQLScalarType @tag(name: "public") {
     name: String!
     description: String
     usage: SchemaCoordinateUsage!
