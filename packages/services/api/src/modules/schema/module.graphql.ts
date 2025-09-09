@@ -797,7 +797,8 @@ export default gql`
     """
     explorer(usage: SchemaExplorerUsageInput): SchemaExplorer
     unusedSchema(usage: UnusedSchemaExplorerUsageInput): UnusedSchemaExplorer @tag(name: "public")
-    deprecatedSchema(usage: DeprecatedSchemaExplorerUsageInput): DeprecatedSchemaExplorer @tag(name: "public")
+    deprecatedSchema(usage: DeprecatedSchemaExplorerUsageInput): DeprecatedSchemaExplorer
+      @tag(name: "public")
 
     schemaCompositionErrors: SchemaErrorConnection @tag(name: "public")
 
@@ -842,7 +843,7 @@ export default gql`
     pageInfo: PageInfo! @tag(name: "public")
   }
 
-  input SchemaExplorerUsageInput  {
+  input SchemaExplorerUsageInput {
     period: DateRangeInput!
   }
 
@@ -901,7 +902,7 @@ export default gql`
     count: Float!
   }
 
-  type SupergraphMetadata {
+  type SupergraphMetadata @tag(name: "public") {
     metadata: [SchemaMetadata!]
     """
     List of service names that own the field/type.
@@ -1017,7 +1018,7 @@ export default gql`
     supergraphMetadata: SupergraphMetadata
   }
 
-  type GraphQLField {
+  type GraphQLField @tag(name: "public") {
     name: String!
     description: String
     type: String!
@@ -1032,7 +1033,7 @@ export default gql`
     supergraphMetadata: SupergraphMetadata
   }
 
-  type GraphQLInputField {
+  type GraphQLInputField @tag(name: "public") {
     name: String!
     description: String
     type: String!
@@ -1047,7 +1048,7 @@ export default gql`
     supergraphMetadata: SupergraphMetadata
   }
 
-  type GraphQLArgument {
+  type GraphQLArgument @tag(name: "public") {
     name: String!
     description: String
     type: String!
@@ -1057,7 +1058,7 @@ export default gql`
     usage: SchemaCoordinateUsage!
   }
 
-  type GraphQLEnumValue {
+  type GraphQLEnumValue @tag(name: "public") {
     name: String!
     description: String
     isDeprecated: Boolean!
