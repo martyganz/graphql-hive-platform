@@ -911,7 +911,7 @@ export default gql`
     ownedByServiceNames: [String!]
   }
 
-  type SchemaMetadata {
+  type SchemaMetadata @tag(name: "public") {
     """
     The name or key of the metadata. This may not be unique.
     """
