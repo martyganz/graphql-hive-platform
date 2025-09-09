@@ -796,8 +796,8 @@ export default gql`
     Experimental: This field is not stable and may change in the future.
     """
     explorer(usage: SchemaExplorerUsageInput): SchemaExplorer
-    unusedSchema(usage: UnusedSchemaExplorerUsageInput): UnusedSchemaExplorer
-    deprecatedSchema(usage: DeprecatedSchemaExplorerUsageInput): DeprecatedSchemaExplorer
+    unusedSchema(usage: UnusedSchemaExplorerUsageInput): UnusedSchemaExplorer @tag(name: "public")
+    deprecatedSchema(usage: DeprecatedSchemaExplorerUsageInput): DeprecatedSchemaExplorer @tag(name: "public")
 
     schemaCompositionErrors: SchemaErrorConnection @tag(name: "public")
 
