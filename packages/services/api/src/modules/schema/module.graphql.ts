@@ -420,7 +420,7 @@ export default gql`
   }
 
   """
-  Describes a schema change for either a schema version (\`SchemaVersion\`) or schema check (\`SchemaCheck\`).
+  Describes a schema change for either a schema version ('SchemaVersion') or schema check ('SchemaCheck').
   """
   type SchemaChange {
     criticality: CriticalityLevel!
@@ -433,11 +433,11 @@ export default gql`
       )
     """
     The severity level of this schema change.
-    Note: A schema change with the impact \`SeverityLevelType.BREAKING\` can still be safe based on the usage (\`SchemaChange.isSafeBasedOnUsage\`).
+    Note: A schema change with the impact 'SeverityLevelType.BREAKING' can still be safe based on the usage ('SchemaChange.isSafeBasedOnUsage').
     """
     severityLevel: SeverityLevelType! @tag(name: "public")
     """
-    The reason for the schema changes severity level (\`SchemaChange.severityLevel\`)
+    The reason for the schema changes severity level ('SchemaChange.severityLevel')
     """
     severityReason: String @tag(name: "public")
     """
@@ -796,7 +796,13 @@ export default gql`
     Experimental: This field is not stable and may change in the future.
     """
     explorer(usage: SchemaExplorerUsageInput): SchemaExplorer
+    """
+    An overview of unused fields and their types within the GraphQL schema.
+    """
     unusedSchema(usage: UnusedSchemaExplorerUsageInput): UnusedSchemaExplorer @tag(name: "public")
+    """
+    An overview of deprecated fields and types with their usage in the GraphQL schema.
+    """
     deprecatedSchema(usage: DeprecatedSchemaExplorerUsageInput): DeprecatedSchemaExplorer
       @tag(name: "public")
 
@@ -848,10 +854,17 @@ export default gql`
   }
 
   input UnusedSchemaExplorerUsageInput @tag(name: "public") {
+    """
+    The period to use in order to determind whether a field is unused.
+    A field is unused if it has not been requested within the specified period.
+    """
     period: DateRangeInput!
   }
 
   input DeprecatedSchemaExplorerUsageInput @tag(name: "public") {
+    """
+    The period for which the usage data should be included within the result.
+    """
     period: DateRangeInput!
   }
 
@@ -874,11 +887,29 @@ export default gql`
     supergraphMetadata: SupergraphMetadata
   }
 
+  """
+  Explorer for navigating unused schema parts within the contextual provided period.
+  """
   type UnusedSchemaExplorer {
+    """
+    The affected unused types and their fields/values/members etc.
+
+    The types within the result only contain unused fields/values/members, all other entities are excluded,
+    they are not a representation of the full GraphQL schema.
+    """
     types: [GraphQLNamedType!]! @tag(name: "public")
   }
 
+  """
+  Explorer for navigating the deprecated schema parts with usage data provided by the contextual period.
+  """
   type DeprecatedSchemaExplorer {
+    """
+    The affected types whose fields/values/members are deprecated.
+
+    The types within the result only contain deprecated fields/values/members, all other entities are excluded,
+    they are not a representation of the full GraphQL schema.
+    """
     types: [GraphQLNamedType!]! @tag(name: "public")
   }
 
@@ -902,16 +933,16 @@ export default gql`
     count: Float!
   }
 
-  type SupergraphMetadata @tag(name: "public") {
+  type SupergraphMetadata {
     metadata: [SchemaMetadata!]
     """
     List of service names that own the field/type.
     Resolves to null if the entity (field, type, scalar) does not belong to any service.
     """
-    ownedByServiceNames: [String!]
+    ownedByServiceNames: [String!] @tag(name: "public")
   }
 
-  type SchemaMetadata @tag(name: "public") {
+  type SchemaMetadata {
     """
     The name or key of the metadata. This may not be unique.
     """
@@ -926,15 +957,27 @@ export default gql`
     source: String
   }
 
-  union GraphQLNamedType @tag(name: "public") =
-    | GraphQLObjectType
-    | GraphQLInterfaceType
-    | GraphQLUnionType
-    | GraphQLEnumType
-    | GraphQLInputObjectType
-    | GraphQLScalarType
+  interface GraphQLNamedType @tag(name: "public") {
+    """
+    The name of the GraphQL type.
+    """
+    name: String!
+    """
+    The description of the GraphQL type.
+    """
+    description: String
+    """
+    The usage of the type within the specified period.
+    """
+    usage: SchemaCoordinateUsage!
+    """
+    Metadata specific to Apollo Federation Projects.
+    Is null if no meta information is available (e.g. this is not an apollo federation project).
+    """
+    supergraphMetadata: SupergraphMetadata
+  }
 
-  type GraphQLObjectType @tag(name: "public") {
+  type GraphQLObjectType implements GraphQLNamedType @tag(name: "public") {
     name: String!
     description: String
     fields: [GraphQLField!]!
@@ -947,7 +990,7 @@ export default gql`
     supergraphMetadata: SupergraphMetadata
   }
 
-  type GraphQLInterfaceType @tag(name: "public") {
+  type GraphQLInterfaceType implements GraphQLNamedType @tag(name: "public") {
     name: String!
     description: String
     fields: [GraphQLField!]!
@@ -960,7 +1003,7 @@ export default gql`
     supergraphMetadata: SupergraphMetadata
   }
 
-  type GraphQLUnionType @tag(name: "public") {
+  type GraphQLUnionType implements GraphQLNamedType @tag(name: "public") {
     name: String!
     description: String
     members: [GraphQLUnionTypeMember!]!
@@ -982,7 +1025,7 @@ export default gql`
     supergraphMetadata: SupergraphMetadata
   }
 
-  type GraphQLEnumType @tag(name: "public") {
+  type GraphQLEnumType implements GraphQLNamedType @tag(name: "public") {
     name: String!
     description: String
     deprecationReason: String
@@ -995,7 +1038,7 @@ export default gql`
     supergraphMetadata: SupergraphMetadata
   }
 
-  type GraphQLInputObjectType @tag(name: "public") {
+  type GraphQLInputObjectType implements GraphQLNamedType @tag(name: "public") {
     name: String!
     description: String
     fields: [GraphQLInputField!]!
@@ -1007,7 +1050,7 @@ export default gql`
     supergraphMetadata: SupergraphMetadata
   }
 
-  type GraphQLScalarType @tag(name: "public") {
+  type GraphQLScalarType implements GraphQLNamedType @tag(name: "public") {
     name: String!
     description: String
     usage: SchemaCoordinateUsage!
