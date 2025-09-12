@@ -799,12 +799,26 @@ export default gql`
     """
     An overview of unused fields and their types within the GraphQL schema.
     """
-    unusedSchema(usage: UnusedSchemaExplorerUsageInput): UnusedSchemaExplorer @tag(name: "public")
+    unusedSchema(
+      """
+      The period to use in order to determind whether a field is unused.
+      A field is unused if it has not been requested within the specified period.
+
+      Defaults to the last 30 days by default.
+      """
+      period: DateRangeInput
+    ): UnusedSchemaExplorer @tag(name: "public")
     """
     An overview of deprecated fields and types with their usage in the GraphQL schema.
     """
-    deprecatedSchema(usage: DeprecatedSchemaExplorerUsageInput): DeprecatedSchemaExplorer
-      @tag(name: "public")
+    deprecatedSchema(
+      """
+      The period for which the usage data should be included within the result.
+
+      Defaults to the last 30 days by default.
+      """
+      period: DateRangeInput
+    ): DeprecatedSchemaExplorer @tag(name: "public")
 
     schemaCompositionErrors: SchemaErrorConnection @tag(name: "public")
 
@@ -853,21 +867,6 @@ export default gql`
     period: DateRangeInput!
   }
 
-  input UnusedSchemaExplorerUsageInput @tag(name: "public") {
-    """
-    The period to use in order to determind whether a field is unused.
-    A field is unused if it has not been requested within the specified period.
-    """
-    period: DateRangeInput!
-  }
-
-  input DeprecatedSchemaExplorerUsageInput @tag(name: "public") {
-    """
-    The period for which the usage data should be included within the result.
-    """
-    period: DateRangeInput!
-  }
-
   type MetadataAttribute {
     name: String!
     values: [String!]!
@@ -913,22 +912,40 @@ export default gql`
     types: [GraphQLNamedType!]! @tag(name: "public")
   }
 
+  """
+  Information about the schema coordinate usage within the contextual period.
+  """
   type SchemaCoordinateUsage @tag(name: "public") {
+    """
+    The total amount of usages of the schema coordinate within the contextual period.
+    """
     total: Float!
+    """
+    Whether the schema coordinate is used within the contextual period.
+    """
     isUsed: Boolean!
     """
     A list of clients that use this schema coordinate within GraphQL operation documents.
     Is null if used by none clients.
     """
     usedByClients: [String!]
+    """
+    The top operations executed for this schema coordinate within the contextual period.
+    """
     topOperations(limit: Int!): [SchemaCoordinateUsageOperation!]!
   }
 
   type SchemaCoordinateUsageOperation @tag(name: "public") {
+    """
+    The name of the GraphQL operation.
+    """
     name: String!
+    """
+    The hash of the GraphQL operation
+    """
     hash: String!
     """
-    The number of times the operation was called.
+    The number of times the operation was called within the contextual period.
     """
     count: Float!
   }
